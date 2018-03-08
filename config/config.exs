@@ -16,6 +16,8 @@ use Mix.Config
 #
 #     Application.get_env(:issues, :key)
 #
+config :issues, github_url: "https://api.github.com"
+
 # You can also configure a 3rd-party app:
 #
 #     config :logger, level: :info
