@@ -67,12 +67,13 @@ defmodule Issues.CLI do
 
   def decode_response({:error, error}) do
     {_, message} = List.keyfind(error, "message", 0)
-    IO.puts "Error fetching from GitHub: #{message}"
+    IO.puts("Error fetching from GitHub: #{message}")
     System.halt(2)
   end
-  
+
   def sort_into_ascending_order(list_of_issues) do
-    Enum.sort list_of_issues,
-      fn i1, i2 -> Map.get(i1, "created_at") <= Map.get(i2, "created_at") end
+    Enum.sort(list_of_issues, fn i1, i2 ->
+      Map.get(i1, "created_at") <= Map.get(i2, "created_at")
+    end)
   end
 end
