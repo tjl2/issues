@@ -53,12 +53,20 @@ defmodule Issues.CLI do
   def process({user, repo, _count}) do
     Issues.GitHubIssues.fetch(user, repo)
     |> decode_response()
+    |> sort_into_descending_order()
   end
 
   def decode_response({:ok, body}), do: body
 
   def decode_response({:error, error}) do
-    IO.puts "Error fetching from GitHub: #{error["message"]}"
+    IO.puts("Error fetching from GitHub: #{error["message"]}")
     System.halt(2)
+  end
+
+  def sort_into_descending_order(list_of_issues) do
+    list_of_issues
+    |> Enum.sort(fn i1, i2 ->
+      i1["created_at"] >= i2["created_at"]
+    end)
   end
 end
