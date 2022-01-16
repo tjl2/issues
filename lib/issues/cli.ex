@@ -7,7 +7,7 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a GitHub repository.
   """
 
-  def run(argv)do
+  def run(argv) do
     argv
     |> parse_args
     |> process
@@ -43,9 +43,10 @@ defmodule Issues.CLI do
   end
 
   def process(:help) do
-    IO.puts """
+    IO.puts("""
     Usage: issues <user> <repo> [<count>]
-    """
+    """)
+
     System.halt(0)
   end
 
