@@ -7,7 +7,11 @@ defmodule Issues.CLI do
   table of the last _n_ issues in a GitHub repository.
   """
 
-  def run(argv), do: parse_args(argv)
+  def run(argv)do
+    argv
+    |> parse_args
+    |> process
+  end
 
   @doc """
   `argv` can be -h or --help, which returns :help.
@@ -19,20 +23,33 @@ defmodule Issues.CLI do
   was given.
   """
   def parse_args(argv) do
-    parsed = OptionParser.parse(argv, switches: [help: :boolean], aliases: [h: :help])
+    OptionParser.parse(argv, switches: [help: :boolean], aliases: [h: :help])
+    |> elem(1)
+    |> args_to_internal_representation()
+  end
 
-    case parsed do
-      {[help: true], _, _} ->
-        :help
+  def args_to_internal_representation([user, repo, count]) do
+    {user, repo, String.to_integer(count)}
+  end
 
-      {_, [user, repo, count], _} ->
-        {user, repo, String.to_integer(count)}
+  def args_to_internal_representation([user, repo]) do
+    {user, repo, @default_count}
+  end
 
-      {_, [user, repo], _} ->
-        {user, repo, @default_count}
+  def args_to_internal_representation(_) do
+    # This function will catch any bad args, or --help (even though
+    # we aren't checking the switches parsed above)
+    :help
+  end
 
-      _ ->
-        :help
-    end
+  def process(:help) do
+    IO.puts """
+    Usage: issues <user> <repo> [<count>]
+    """
+    System.halt(0)
+  end
+
+  def process({user, repo, _count}) do
+    Issues.GitHubIssues.fetch(user, repo)
   end
 end
