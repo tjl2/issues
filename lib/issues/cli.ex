@@ -4,7 +4,7 @@ defmodule Issues.CLI do
   @default_count 4
 
   @moduledoc """
-  Handle the command line parsing and the dispatch to 
+  Handle the command line parsing and the dispatch to
   the various functions that end up generating a
   table of the last _n_ issues in a GitHub repository.
   """
@@ -16,16 +16,19 @@ defmodule Issues.CLI do
   end
 
   @doc """
-  `argv` can be -h or --help, which returns :help.
+  `argv` can be -h or --help, which returns   `:help`.
 
-  Otherwise it is a GH user name, repo name and (optionally)
-  the number of issues to format.
+  Otherwise it is a github user name, project name, and (optionally)
+  the number of entries to format
 
   Return a tuple of `{user, repo, count}`, or :help if help
   was given.
   """
   def parse_args(argv) do
-    OptionParser.parse(argv, switches: [help: :boolean], aliases: [h: :help])
+    OptionParser.parse(argv,
+      switches: [help: :boolean],
+      aliases: [h: :help]
+    )
     |> elem(1)
     |> args_to_internal_representation()
   end
@@ -38,6 +41,7 @@ defmodule Issues.CLI do
     {user, repo, @default_count}
   end
 
+  # bad arg or --help
   def args_to_internal_representation(_) do
     # This function will catch any bad args, or --help (even though
     # we aren't checking the switches parsed above)
@@ -67,16 +71,16 @@ defmodule Issues.CLI do
     System.halt(2)
   end
 
+  def last(list, count) do
+    list
+    |> Enum.take(count)
+    |> Enum.reverse()
+  end
+
   def sort_into_descending_order(list_of_issues) do
     list_of_issues
     |> Enum.sort(fn i1, i2 ->
       i1["created_at"] >= i2["created_at"]
     end)
-  end
-
-  def last(list, count) do
-    list
-    |> Enum.take(count)
-    |> Enum.reverse()
   end
 end
