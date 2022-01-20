@@ -10,6 +10,13 @@ defmodule Issues.MixProject do
       name: "Issues",
       source_url: "https://github.com/tjl2/issues",
       start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       deps: deps()
     ]
   end
@@ -28,7 +35,8 @@ defmodule Issues.MixProject do
       {:httpoison, "~> 1.7"},
       {:poison, "~> 5.0"},
       {:ex_doc, "~> 0.27.3"},
-      {:earmark, "~> 1.4"}
+      {:earmark, "~> 1.4"},
+      {:excoveralls, "~> 0.14.4", only: :test}
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]
   end
