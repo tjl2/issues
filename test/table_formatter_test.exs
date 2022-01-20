@@ -3,6 +3,7 @@ defmodule TableFormatterTest do
   use ExUnit.Case
   # And allow us to capture stuff sent to stdout
   import ExUnit.CaptureIO
+  doctest Issues.TableFormatter
 
   alias Issues.TableFormatter, as: TF
 
